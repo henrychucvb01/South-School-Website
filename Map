@@ -1,1 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>School Map</title>
 
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #map { height: 100vh; width: 100vw; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Center near Long Beach (adjust later)
+    const map = L.map('map').setView([33.7701, -118.1937], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // Example school data (you can swap this with your real list)
+    const schools = [
+      { name: "Carver ES", lat: 33.82, lng: -118.18, meals: 363, mplh: 25.03 },
+      { name: "Marshall MS", lat: 33.79, lng: -118.20, meals: 280, mplh: 18.6 }
+    ];
+
+    schools.forEach(s => {
+      const marker = L.circleMarker([s.lat, s.lng], { radius: 8 });
+
+      marker.bindPopup(`
+        <b>${s.name}</b><br/>
+        Meals: ${s.meals}<br/>
+        MPLH: ${s.mplh}
+      `);
+
+      // Hover opens popup, mouseout closes
+      marker.on('mouseover', function () { this.openPopup(); });
+      marker.on('mouseout', function () { this.closePopup(); });
+
+      marker.addTo(map);
+    });
+  </script>
+</body>
+</html>
